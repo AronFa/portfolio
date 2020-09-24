@@ -113,6 +113,8 @@ def test_function(test_case):
 
 if __name__ == '__main__':
 
+    # TEST FUNCTION
+
     # Test with short, rotated lists
     print('\nTest with rotated lists')
     test_function([[6, 7, 8, 9, 10, 1, 2, 3, 4], 6])
