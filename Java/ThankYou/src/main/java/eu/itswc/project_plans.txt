@@ -1,0 +1,8 @@
+STEPS IN DEVELOPING PROJECT THANK YOU
+
+Finish adding support for Media
+
+Integrate the Location class
+
+
+Add users and security
