@@ -1,6 +1,8 @@
 package eu.itswc.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -10,29 +12,36 @@ public class ThankYouTokenPassed {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID", updatable = false, nullable = false)
-    private String id;
+    private Long id;
 
+    @NotEmpty
     @Column(name = "TOKEN_ID")
     private String tokenId;
 
+    // TODO: catch and solve the case of descriptions longer 500 char.
     @Column(name = "DESCRIPTION")
+    @Size(max = 500)
     private String description;
 
-    @Column(name = "TIME")
-    private String timeOfInteraction;
+    @Column(name = "DATE")
+    private String date;
 
-    @Column(name = "LOCATION_ID")
-    private String locationIdOfInteraction;
+    @Column(name = "COORDINATES_ID")
+    private Long coordinatesId;
 
-    public ThankYouTokenPassed() {
+    public ThankYouTokenPassed(){
+        initializeDate();
     }
 
+    private void initializeDate(){
+        setDate(DateStuff.getTodayUTC());
+    }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -52,20 +61,20 @@ public class ThankYouTokenPassed {
         this.description = description;
     }
 
-    public String getTimeOfInteraction() {
-        return timeOfInteraction;
+    public String getDate() {
+        return date;
     }
 
-    public void setTimeOfInteraction(String timeOfInteraction) {
-        this.timeOfInteraction = timeOfInteraction;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getLocationIdOfInteraction() {
-        return locationIdOfInteraction;
+    public Long getCoordinatesId() {
+        return coordinatesId;
     }
 
-    public void setLocationIdOfInteraction(String locationIdOfInteraction) {
-        this.locationIdOfInteraction = locationIdOfInteraction;
+    public void setCoordinatesId(Long coordinatesId) {
+        this.coordinatesId = coordinatesId;
     }
 
 }

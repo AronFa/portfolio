@@ -19,15 +19,23 @@ public class ThankYouToken {
     @Column (name = "INITIAL_DESCRIPTION")
     private String initialDescription;
 
-    @Column(name = "INITIAL_LOCATION")
-    private String initialLocationId;
+    @Column (name = "INTRODUCED")
+    private String initialDate;
 
-    public ThankYouToken(){};
+    @Column(name = "INITIAL_COORDINATES_ID")
+    private Long initialCoordinates;
+
+    public ThankYouToken(){
+        initializeDate();
+    };
 
     public ThankYouToken(String id){
         this.id = id;
     }
 
+    private void initializeDate(){
+        setInitialDate(DateStuff.getTodayUTC());
+    }
 
     public String getId() {
         return id;
@@ -53,11 +61,20 @@ public class ThankYouToken {
         this.initialDescription = initialDescription;
     }
 
-    public String getInitialLocationId() {
-        return initialLocationId;
+    public String getDateIntroduced() {
+        return initialDate;
     }
 
-    public void setInitialLocationId(String initialLocationId) {
-        this.initialLocationId = initialLocationId;
+    public void setInitialDate(String initialDate) {
+        this.initialDate = initialDate;
     }
+
+    public Long getInitialCoordinatesId() {
+        return initialCoordinates;
+    }
+
+    public void setInitialCoordinatesId(Long c) {
+        this.initialCoordinates = c;
+    }
+
 }

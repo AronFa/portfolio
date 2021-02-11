@@ -1,8 +1,10 @@
 package eu.itswc.controller;
 
-import eu.itswc.model.Location;
+import eu.itswc.exception.BodyConflictingPathException;
+import eu.itswc.model.Coordinates;
 import eu.itswc.model.ThankYouToken;
-import eu.itswc.services.*;
+import eu.itswc.services.CoordinatesService;
+import eu.itswc.services.ThankYouTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,74 +16,52 @@ public class ThankYouTokenController {
 
     @Autowired
     private ThankYouTokenService tyTokenService;
+
     @Autowired
-    private LocationService locationService;
+    private CoordinatesService coordinatesService;
 
     @GetMapping("")
     public Iterable<ThankYouToken> getAllTokens(){
         return tyTokenService.getAllTokens();
     }
 
-    //TODO: i don't like how the error handling is making the code a harder to read,
-    //      maybe i should take a different approach to exception handling.
-
-    @PostMapping("")
-    public ResponseEntity<String> addToken(@RequestBody ThankYouToken token){
-        if (! tyTokenService.containsToken(token)) {
-            tyTokenService.addToken(token);
-            return new ResponseEntity<>("token added", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("tokenId taken (to edit tokens use PUT on /token/id)", HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/{id}")
+    public ThankYouToken getTokenById(@PathVariable String id){
+        return tyTokenService.getTokenById(id);
     }
 
-    @GetMapping("/{id}")
-    // TODO: i don't like it being <Object>, maybe convert it to JSON manually? or do something with Optional<Token>?
-    public ResponseEntity<Object> getTokenById(@PathVariable String id){
-        if (tyTokenService.containsTokenWithId(id)) {
-            return new ResponseEntity<Object>(tyTokenService.getTokenById(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Object>("tokenId does not exist", HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping("")
+    public ResponseEntity<String> addToken(@RequestBody ThankYouToken t){
+        tyTokenService.addToken(t);
+        return new ResponseEntity<String>("token added", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateToken(@PathVariable String id, @RequestBody ThankYouToken token) {
-        if (tyTokenService.containsTokenWithId(id) && token.getId().equals(id)){
-            tyTokenService.updateToken(token);
-            return new ResponseEntity<>("token updated", HttpStatus.OK);
-        } else if(token.getId().equals(id)) {
-            return new ResponseEntity<>("tokenId does not exist (to create token use POST on /token)", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>("id in request body does not match the one in the path", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> updateToken(@PathVariable String id, @RequestBody ThankYouToken t) {
+        makeSureBodyDoesNotConflictIdInPath(t, id);
+        tyTokenService.updateToken(t);
+        return new ResponseEntity<>("token updated", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteToken(@PathVariable String id){
-        if (tyTokenService.containsTokenWithId(id)) {
-            tyTokenService.deleteTokenById(id);
-            return new ResponseEntity<>("token deleted", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("tokenId does not exist", HttpStatus.BAD_REQUEST);
+        tyTokenService.deleteTokenById(id);
+        return new ResponseEntity<>("token deleted", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}")
+    // TODO: Why am i not getting the custom exception message when the req body contains invalid coordinates?
+    public ResponseEntity<String> addCoordinates (@PathVariable("id") String tokenId, @RequestBody Coordinates c) {
+        Long cId = coordinatesService.saveCoordinates(c);
+        tyTokenService.addCoordinatesIdToToken(cId, tokenId);
+        return new ResponseEntity<>("coordinates added", HttpStatus.OK);
+    }
+
+    private void makeSureBodyDoesNotConflictIdInPath(ThankYouToken t, String id) {
+        if (! t.getId().equals(id)){
+            throw new BodyConflictingPathException(t, id);
         }
     }
 
-    @PostMapping("/{id}/location")
-    public ResponseEntity<String> addLocation(@PathVariable("id") String tokenId, @RequestBody Location loc) {
-        try {
-            ThankYouToken t = tyTokenService.getTokenById(tokenId).orElseThrow(NoSuchFieldError::new);
-            if (Location.locationIsValid(loc)) {
-                locationService.addLocation(loc);
-                t.setInitialLocationId(locationService.getLocationIdByInstance(loc));
-                return new ResponseEntity<>("location added", HttpStatus.OK);
-            } else {
-                throw new IllegalArgumentException("invalid location");
-            }
-        } catch (NoSuchFieldError e) {
-            return new ResponseEntity<>("tokenId does not exist (to create token use POST on /token)", HttpStatus.BAD_REQUEST);
-        } catch (IllegalArgumentException e){
-            return new ResponseEntity<>("invalid location ( -90 <= Lat <= 90; 0 <= Long <=360)", HttpStatus.BAD_REQUEST);
-        }
-    }
+
 }

@@ -31,9 +31,9 @@ public class TyTokenPassedTest {
                 "there is something wrong with .setDescription or .getDescription");
 
         String tlid = "testLocationId";
-        tytPassed.setLocationIdOfInteraction(tlid);
-        Assertions.assertEquals(tlid, tytPassed.getLocationIdOfInteraction(),
-                "there is something wrong with .setLocId or .getLocId" );
+        // tytPassed.setLocationIdOfInteraction(tlid);
+        // Assertions.assertEquals(tlid, tytPassed.getLocationIdOfInteraction(),
+        //        "there is something wrong with .setLocId or .getLocId" );
 
     }
 

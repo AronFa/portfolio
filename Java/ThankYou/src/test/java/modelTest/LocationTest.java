@@ -1,13 +1,14 @@
 package modelTest;
 
-import eu.itswc.model.Location;
+/*
+import eu.itswc.model.Coordinates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
 
-@DisplayName("Testing the Location(lat, long) model")
+@DisplayName("Testing the Coordinates(lat, long) model")
 public class LocationTest {
 
     @Test
@@ -15,10 +16,10 @@ public class LocationTest {
     public void testConstructor(){
         double lt = 70;
         double lg = 60;
-        Location loc = new Location(lt, lg);
-        assert(loc.getClass() == Location.class);
-        Assertions.assertEquals(loc.getClass(), Location.class,
-                "A pair of type 'double' variables should be an accepted way of constructing a Location instance.");
+        Coordinates loc = new Coordinates(lt, lg);
+        assert(loc.getClass() == Coordinates.class);
+        Assertions.assertEquals(loc.getClass(), Coordinates.class,
+                "A pair of type 'double' variables should be an accepted way of constructing a Coordinates instance.");
     }
 
     @Test
@@ -32,16 +33,16 @@ public class LocationTest {
         double lg_ok = 210;
         double lg_too_LARGE = 390;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Location(lt_too_small, lg_too_small),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Coordinates(lt_too_small, lg_too_small),
                 "Invalid Lat and Long values should throw IllegalArgumentException.");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Location(lt_too_small, lg_ok),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Coordinates(lt_too_small, lg_ok),
                 "-90 < Lat should throw IllegalArgumentException");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Location(lt_too_LARGE, lg_ok),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Coordinates(lt_too_LARGE, lg_ok),
                 "90 < Lat should throw IllegalArgumentException");
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Location(lt_ok, lg_too_small),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Coordinates(lt_ok, lg_too_small),
                 "0 < Lat should throw IllegalArgumentException");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Location(lt_ok, lg_too_LARGE),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Coordinates(lt_ok, lg_too_LARGE),
                 "360 < Lat should throw IllegalArgumentException");
     }
 
@@ -50,7 +51,7 @@ public class LocationTest {
     public void testValueValediction2() {
         double lt_ok = 30;
         double lg_ok = 60;
-        Location loc = new Location(lt_ok, lg_ok);
+        Coordinates loc = new Coordinates(lt_ok, lg_ok);
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> loc.setLatitude(-90.01),
                 "Setting the Lat < -90 should throw IllegalArgumentException");
@@ -63,7 +64,7 @@ public class LocationTest {
     public void testValueRange(){
         long lt_ok = 60;
         long lg_ok = 140;
-        Location loc = new Location(lt_ok, lg_ok);
+        Coordinates loc = new Coordinates(lt_ok, lg_ok);
 
         for (int i=-90; i<90.1; i+=3){
             loc.setLatitude(i);
@@ -80,3 +81,4 @@ public class LocationTest {
         }
     }
 }
+ */
